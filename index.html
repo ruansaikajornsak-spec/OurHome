@@ -1,0 +1,297 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#175c43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="OurHome"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.svg"><title>OurHome v1.4 Board Smooth</title>
+<style>
+:root{--g:#175c43;--g2:#e8f3ed;--bg:#f7f4ec;--c:#fff;--line:#e2e7e3;--tx:#25332b;--mu:#758078;--red:#a44943;--amber:#8a6500}*{box-sizing:border-box}body{margin:0;background:#ecebe7;font-family:system-ui,"Noto Sans Thai",sans-serif;color:var(--tx)}.app{max-width:520px;min-height:100vh;margin:auto;background:var(--bg);padding:14px 14px 96px}.hero{background:var(--g);color:#fff;border-radius:24px;padding:19px}.hero h1{margin:0}.card{background:var(--c);border:1px solid var(--line);border-radius:19px;padding:14px;margin:10px 0}h2,h3{margin:0 0 10px}.small{font-size:12px;color:var(--mu)}.msg{padding:10px;border-radius:13px;background:#fff0c9;margin:10px 0}.msg.ok{background:#e5f3eb;color:var(--g)}input,select,textarea,button{font:inherit;width:100%;padding:11px;border-radius:11px}input,select,textarea{border:1px solid #d7ddd9;background:#fff;margin:4px 0}button{border:0;background:var(--g);color:#fff;font-weight:800;margin:3px 0}.soft{background:var(--g2);color:var(--g)}.danger{background:#f9e7e5;color:var(--red)}.row{display:flex;gap:7px}.row>*{flex:1}.hidden{display:none!important}.item{border-top:1px solid #edf0ed;padding:11px 0}.item:first-child{border:0}.badge{display:inline-block;padding:4px 7px;border-radius:99px;background:#edf1ee;font-size:11px}.green{background:#e5f3eb;color:var(--g)}.red{background:#f9e7e5;color:var(--red)}.yellow{background:#fff0c9;color:var(--amber)}.big{font-size:24px;font-weight:900}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{padding:10px;background:#f2f6f3;border-radius:14px;text-align:center}.nav{position:fixed;z-index:9;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(6,1fr);background:#fff;border-top:1px solid #ddd;padding:5px 3px calc(5px + env(safe-area-inset-bottom))}.nav button{background:transparent;color:#68736c;font-size:10px;padding:6px 1px}.nav span{font-size:20px;display:block}.nav .on{color:var(--g)}.members{display:grid;grid-template-columns:1fr 1fr;gap:7px}.person{background:#f3f6f4;padding:10px;border-radius:14px}.qr{width:100%;max-height:250px;object-fit:contain;border-radius:12px;border:1px solid var(--line);margin:7px 0}.busy{opacity:.55;pointer-events:none}
+
+.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;border:3px solid #fff;background:#dfe9e3}
+.avatar.sm{width:34px;height:34px;border-width:1px;vertical-align:middle;margin-right:7px}
+.profileHead{display:flex;gap:12px;align-items:center}.watermark{text-align:center;font-size:11px;color:#98a099;padding:18px 0 2px}
+.heroTop{display:flex;justify-content:space-between;align-items:center}.heroProfile{width:58px;padding:0;background:transparent;margin:0}
+.activity{padding:9px 0;border-top:1px solid #edf0ed}.activity:first-child{border:0}
+.modal{position:fixed;z-index:50;inset:0;background:#0008;display:flex;align-items:flex-end;justify-content:center}
+.modalBox{width:min(520px,100%);max-height:88vh;overflow:auto;background:var(--bg);border-radius:24px 24px 0 0;padding:16px}
+
+.toast{position:fixed;z-index:90;top:16px;left:50%;transform:translate(-50%,-130px);width:min(460px,calc(100% - 28px));background:#183f32;color:#fff;padding:12px 14px;border-radius:16px;box-shadow:0 8px 30px #0003;transition:.25s}.toast.show{transform:translate(-50%,0)}.toast b{display:block}.settingRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.settingRow input{width:auto}.avatar{background:#dfe9e3}.avatar.bad{display:none}
+
+.boardHero{background:linear-gradient(180deg,#fff8dd,#fff);border:1px solid #eadfb6}
+.boardTop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.boardTop button{width:auto;padding:9px 12px}
+.topic{border:1px solid #e4e1d7;border-radius:14px;padding:12px;margin:9px 0;background:#fff}
+.topic.pinned{border-color:#d3b85b;background:#fffdf4}
+.topicTitle{font-size:16px;font-weight:900}.topicMeta{font-size:11px;color:var(--mu);margin:4px 0}
+.boardAvatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#dfe9e3;flex:0 0 auto}
+.postHead{display:flex;gap:9px;align-items:center;margin-bottom:8px}.postBody{white-space:pre-wrap;line-height:1.55}
+.reply{border-top:1px solid #ecebe5;padding:12px 0}.reply:first-child{border-top:0}
+.reactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.react{width:auto;padding:6px 9px;background:#f2f3ef;color:#445149;font-weight:700}
+.boardImg{width:100%;max-height:320px;object-fit:contain;border-radius:12px;margin-top:8px;background:#f4f4f1}
+.boardBadge{display:inline-block;background:#efe8c9;color:#6d5b17;padding:3px 7px;border-radius:99px;font-size:10px}
+.boardFab{position:fixed;right:max(18px,calc((100vw - 520px)/2 + 18px));bottom:88px;z-index:8;width:52px;height:52px;border-radius:50%;font-size:23px;box-shadow:0 7px 20px #0003}
+</style></head><body><div id="toast" class="toast"></div><div class="app"><div class="hero"><div class="heroTop"><div><h1>🏠 OurHome</h1><div id="heroSub">v1.4 • Board Smooth</div></div><button id="openProfile" class="heroProfile" aria-label="โปรไฟล์"><img id="heroAvatar" class="avatar" alt="โปรไฟล์"></button></div></div><div id="msg" class="msg">กำลังเชื่อม Cloud…</div>
+<section id="auth" class="card hidden"><h3>🔐 เข้าสู่ระบบ</h3><input id="email" type="email" placeholder="อีเมล"><input id="password" type="password" placeholder="รหัสผ่าน"><div class="row"><button id="login">เข้าสู่ระบบ</button><button id="signup" class="soft">สมัคร</button></div></section>
+<section id="setup" class="card hidden"><h3>🏠 บ้าน</h3><input id="displayName" placeholder="ชื่อของคุณ"><input id="houseName" placeholder="ชื่อบ้าน"><button id="createHouse">สร้างบ้าน</button><hr><input id="invite" placeholder="รหัสเชิญ"><button id="joinHouse" class="soft">เข้าร่วมบ้าน</button></section>
+<main id="main" class="hidden">
+<section id="home" class="page"><div class="card boardHero"><div class="boardTop"><div><h3>💬 กระดานบ้าน</h3><div class="small">คุยกันแบบเว็บบอร์ด • ตอบสดแบบ Realtime</div></div><button id="openBoard">เปิด Board <span id="boardNew"></span></button></div><div id="boardPreview" class="small" style="margin-top:8px">ยังไม่มีกระทู้</div></div><div class="card"><h3 id="houseTitle">บ้าน</h3><div id="houseMeta" class="small"></div><div id="members" class="members"></div><select id="myStatus"><option>อยู่บ้าน</option><option>ทำงาน</option><option>กำลังกลับ</option><option>กำลังซื้อของ</option><option>ไม่ว่าง</option></select><button id="setStatus" class="soft">อัปเดตสถานะ</button></div><div class="card"><h3>ภาพรวม</h3><div id="stats" class="grid"></div></div><div class="card"><h3>🍽️ วันนี้</h3><div id="todayMeals"></div></div><div class="card"><h3>🧾 บิลที่ต้องจัดการ</h3><div id="homeBills"></div></div></section>
+<section id="meals" class="page hidden"><div class="card"><h3>🍳 อาหาร</h3><input id="mealDate" type="date"><select id="mealType"><option>เช้า</option><option>กลางวัน</option><option>เย็น</option></select><input id="mealName" placeholder="เมนู"><button id="saveMeal">บันทึก / แทนที่เมนู</button></div><div class="card"><h3>7 วัน</h3><div id="mealList"></div></div></section>
+<section id="shopping" class="page hidden"><div class="card"><h3>🛒 ฝากซื้อ</h3><input id="shopName" placeholder="รายการ"><div class="row"><input id="shopQty" value="1" placeholder="จำนวน"><select id="shopCategory"><option>อาหาร</option><option>ของใช้</option><option>เครื่องดื่ม</option><option>อื่น ๆ</option></select></div><select id="shopPriority"><option value="high">🔴 ต้องซื้อวันนี้</option><option value="normal">🟡 ซื้อเมื่อสะดวก</option><option value="low">🟢 ไม่รีบ</option></select><button id="addShop">เพิ่ม</button></div><div class="card"><div id="shopList"></div></div></section>
+<section id="stock" class="page hidden"><div class="card"><h3>📦 ของในบ้าน</h3><input id="stockName" placeholder="ชื่อของ"><div class="row"><input id="stockQty" placeholder="จำนวน"><select id="stockCat"><option>อาหาร</option><option>ของใช้</option><option>อื่น ๆ</option></select></div><select id="stockState"><option>มีอยู่</option><option>ใกล้หมด</option><option>หมดแล้ว</option></select><button id="addStock">เพิ่มของ</button></div><div class="card"><div id="stockList"></div></div></section>
+<section id="expenses" class="page hidden"><div class="card"><h3>💰 ค่าใช้จ่าย</h3><input id="expenseName" placeholder="รายการ"><div class="row"><input id="expenseAmount" type="number" step=".01" placeholder="บาท"><input id="expenseDate" type="date"></div><select id="expenseCat"><option>อาหาร</option><option>ของใช้</option><option>เดินทาง</option><option>บิล</option><option>อื่น ๆ</option></select><input id="expenseNote" placeholder="หมายเหตุ"><button id="addExpense">บันทึก</button></div><div class="card"><h3>เดือนนี้ <span id="expenseTotal"></span></h3><div id="expenseByMember" class="small"></div><div id="expenseList"></div></div></section>
+<section id="bills" class="page hidden"><div class="card"><h3>🧾 เพิ่มบิล</h3><div class="row"><select id="billType"><option>⚡ ค่าไฟ</option><option>💧 ค่าน้ำ</option><option>🌐 อินเทอร์เน็ต</option><option>🏠 ค่าเช่า</option><option>📱 ค่าโทรศัพท์</option><option>🧾 อื่น ๆ</option></select><input id="billAmount" type="number" step=".01" placeholder="ยอด"></div><input id="billPeriod" placeholder="รอบบิล"><input id="billDue" type="date"><input id="billRef" placeholder="เลขอ้างอิง"><input id="billNote" placeholder="หมายเหตุ"><label class="small">QR Code<input id="billQr" type="file" accept="image/jpeg,image/png,image/webp"></label><button id="addBill">บันทึกบิล</button></div><div class="card"><div id="billList"></div></div></section>
+<section id="house" class="page hidden"><div class="card"><h3>👥 บ้านและสมาชิก</h3><div id="houseInfo"></div><button id="copyInvite" class="soft">คัดลอกรหัสเชิญ</button></div><div class="card"><div id="houseMembers"></div></div><button id="logout" class="danger">ออกจากระบบ</button></section>
+
+
+<section id="board" class="page hidden">
+ <div class="card boardHero"><div class="boardTop"><div><h3>💬 OurHome Board</h3><div class="small">กระดานสนทนาประจำบ้าน</div></div><button id="newTopicBtn">＋ ตั้งกระทู้</button></div>
+ <select id="boardFilter"><option value="">ทุกหมวด</option><option>ทั่วไป</option><option>เรื่องบ้าน</option><option>ซื้อของ</option><option>กินอะไร</option><option>เตือนความจำ</option></select></div>
+ <div class="card"><div id="topicList"></div></div>
+</section>
+
+<section id="topicView" class="page hidden">
+ <div class="card"><button id="backBoard" class="soft">← กลับกระดาน</button><div id="topicPost"></div></div>
+ <div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">💬 ความคิดเห็น</h3><button id="toggleReplies" class="soft" style="display:none;width:auto">ดูข้อความก่อนหน้า</button></div><div id="replyHint" class="small" style="margin:8px 0"></div><div id="replyList"></div></div>
+ <div class="card"><h3>ตอบกระทู้</h3><textarea id="replyBody" rows="4" placeholder="พิมพ์ข้อความ..."></textarea><label class="small">แนบรูป<input id="replyImage" type="file" accept="image/jpeg,image/png,image/webp"></label><button id="sendReply">ส่งความคิดเห็น</button></div>
+</section>
+
+<div id="topicModal" class="modal hidden"><div class="modalBox">
+ <h3>📝 ตั้งกระทู้ใหม่</h3>
+ <select id="topicCategory"><option>ทั่วไป</option><option>เรื่องบ้าน</option><option>ซื้อของ</option><option>กินอะไร</option><option>เตือนความจำ</option></select>
+ <input id="topicTitle" placeholder="หัวข้อกระทู้">
+ <textarea id="topicBody" rows="6" placeholder="เขียนข้อความ..."></textarea>
+ <label class="small">แนบรูป<input id="topicImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
+ <button id="createTopic">โพสต์กระทู้</button><button id="closeTopicModal" class="soft">ยกเลิก</button>
+</div></div>
+
+<section id="profile" class="page hidden">
+ <div class="card"><div class="profileHead"><img id="profileAvatar" class="avatar" alt=""><div><h3 id="profileTitle">โปรไฟล์ของฉัน</h3><div class="small">บัญชีสมาชิก OurHome</div></div></div>
+ <label class="small">รูปโปรไฟล์<input id="profileFile" type="file" accept="image/jpeg,image/png,image/webp"></label>
+ <input id="profileName" placeholder="ชื่อที่แสดง"><input id="profileBio" placeholder="ข้อความสั้น ๆ">
+ <label class="small">สีประจำตัว<input id="profileColor" type="color" value="#175c43"></label>
+ <button id="saveProfile">บันทึกโปรไฟล์</button></div>
+ <div class="card"><h3>👥 สมาชิกในบ้าน</h3><div id="profileMembers"></div></div>
+ <div class="card"><h3>📜 Activity ล่าสุด</h3><div id="activityList"></div></div>
+ <div class="card"><h3>🔔 การแจ้งเตือน</h3><div class="settingRow"><div><b>เสียงแจ้งเตือน</b><div class="small">ดังเมื่อสมาชิกคนอื่นอัปเดตบ้านขณะเปิดแอป</div></div><input id="soundToggle" type="checkbox"></div><button id="testSound" class="soft">🔊 ทดสอบเสียง</button></div>
+<div class="card"><h3>🏠 จัดการบ้าน</h3><div id="ownerTools"></div><button id="leaveHouse" class="danger">🚪 ออกจากบ้านนี้</button></div>
+<div class="card"><h3>⚙️ บัญชี</h3><button id="profileLogout" class="danger">ออกจากระบบ</button></div>
+ </section>
+</main><div class="watermark">OurHome • พัฒนาโดย Tonmike</div></div>
+
+<div id="billModal" class="modal hidden"><div class="modalBox">
+ <h3>✏️ แก้ไขบิล</h3><input id="editBillId" type="hidden">
+ <select id="editBillType"><option>⚡ ค่าไฟ</option><option>💧 ค่าน้ำ</option><option>🌐 อินเทอร์เน็ต</option><option>🏠 ค่าเช่า</option><option>📱 ค่าโทรศัพท์</option><option>🧾 อื่น ๆ</option></select>
+ <input id="editBillAmount" type="number" step=".01" placeholder="ยอดเงิน"><input id="editBillPeriod" placeholder="รอบบิล"><input id="editBillDue" type="date"><input id="editBillRef" placeholder="เลขอ้างอิง"><input id="editBillNote" placeholder="หมายเหตุ">
+ <label class="small">เปลี่ยน QR (ไม่เลือก = ใช้รูปเดิม)<input id="editBillQr" type="file" accept="image/jpeg,image/png,image/webp"></label>
+ <button id="saveBillEdit">บันทึกการแก้ไข</button><button id="cancelBill" class="danger">ยกเลิกบิลนี้</button><button id="closeBillModal" class="soft">ปิด</button>
+ <div class="card"><h3>ประวัติการแก้ไข</h3><div id="billHistory"></div></div>
+</div></div>
+<nav id="nav" class="nav hidden"><button data-p="home"><span>🏠</span>หน้าหลัก</button><button data-p="meals"><span>🍳</span>อาหาร</button><button data-p="shopping"><span>🛒</span>ซื้อของ</button><button data-p="stock"><span>📦</span>ของ</button><button data-p="expenses"><span>💰</span>เงิน</button><button data-p="bills"><span>🧾</span>บิล</button></nav>
+<script type="module">
+const URL="https://jsnkydqaymdinzqxwund.supabase.co",KEY="sb_publishable_-C3kJGzrk0YU05RD4w7-bA_I7yEzYCm",$=x=>document.getElementById(x),S={members:[],meals:[],shop:[],stock:[],expenses:[],bills:[],activity:[],topics:[],replies:[],reactions:[]};let sb,user,hid,me,house,channel,busy=false,currentTopic=null;
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])),money=n=>"฿"+Number(n||0).toLocaleString("th-TH",{minimumFractionDigits:2}),today=()=>new Date().toISOString().slice(0,10),show=(x,v=true)=>$(x).classList.toggle("hidden",!v);
+function say(t,ok=false){$("msg").textContent=t;$("msg").className="msg"+(ok?" ok":"")}function page(p){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x.dataset.p===p))}
+document.querySelectorAll("#nav button").forEach(x=>x.onclick=()=>page(x.dataset.p));$("mealDate").value=$("expenseDate").value=today();
+async function act(btn,fn){if(busy)return;busy=true;let old=btn?.textContent;if(btn){btn.disabled=true;btn.textContent="กำลังบันทึก…"}try{await fn()}catch(e){say(e.message||String(e))}finally{busy=false;if(btn){btn.disabled=false;btn.textContent=old}}}
+async function boot(){try{let lib=await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");sb=lib.createClient(URL,KEY);let r=await sb.auth.getSession();if(r.error)throw r.error;if(!r.data.session){show("auth");return say("Cloud พร้อม • เข้าสู่ระบบ",true)}user=r.data.session.user;await enter()}catch(e){say("เชื่อม Cloud ไม่สำเร็จ: "+e.message)}}
+$("signup").onclick=e=>act(e.currentTarget,async()=>{let r=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value});if(r.error)throw r.error;if(r.data.session){user=r.data.user;await enter()}else say("สมัครแล้ว กรุณายืนยันอีเมล",true)});
+$("login").onclick=e=>act(e.currentTarget,async()=>{let r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(r.error)throw r.error;user=r.data.user;await enter()});
+$("logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
+async function enter(){show("auth",false);let r=await sb.from("household_members").select("household_id,display_name,status,households(name,invite_code,owner_id)").eq("user_id",user.id).limit(1).maybeSingle();if(r.error)throw r.error;if(!r.data){show("setup");return say("สร้างบ้านหรือเข้าร่วมบ้าน",true)}me=r.data;hid=me.household_id;house=me.households;show("setup",false);show("main");show("nav");$("houseTitle").textContent="🏠 "+house.name;$("houseMeta").textContent="รหัสเชิญ "+house.invite_code+" • "+me.display_name;$("heroSub").textContent=house.name+" • v1.3 Board";$("myStatus").value=me.status||"อยู่บ้าน";page("home");await refresh();await renderProfiles();realtime();say("พร้อมใช้งาน",true)}
+$("createHouse").onclick=e=>act(e.currentTarget,async()=>{let r=await sb.rpc("create_household",{p_name:$("houseName").value.trim(),p_display_name:$("displayName").value.trim()});if(r.error)throw r.error;await enter()});
+$("joinHouse").onclick=e=>act(e.currentTarget,async()=>{let r=await sb.rpc("join_household",{p_code:$("invite").value.trim(),p_display_name:$("displayName").value.trim()});if(r.error)throw r.error;await enter()});
+$("setStatus").onclick=e=>act(e.currentTarget,async()=>{let r=await sb.rpc("update_my_status",{p_household:hid,p_status:$("myStatus").value});if(r.error)throw r.error;await loadMembers();say("อัปเดตสถานะแล้ว",true)});
+async function activity(type,title,detail="",relatedType=null,relatedId=null){try{await sb.rpc("add_household_activity",{p_household:hid,p_type:type,p_title:title,p_detail:detail||null,p_related_type:relatedType,p_related_id:relatedId})}catch{}}
+async function refresh(){await Promise.all([loadMembers(),loadMeals(),loadShop(),loadStock(),loadExpenses(),loadBills(),loadTopics()]);homeRender();houseRender()}
+async function loadMembers(){let r=await sb.from("household_members").select("*").eq("household_id",hid).order("joined_at");if(r.error)throw r.error;S.members=r.data;$("members").innerHTML=r.data.map(x=>`<div class="person"><b>${esc(x.display_name)}</b><br><span class="badge green">${esc(x.status)}</span></div>`).join("")}
+$("saveMeal").onclick=e=>act(e.currentTarget,async()=>{let n=$("mealName").value.trim();if(!n)throw Error("กรอกชื่อเมนู");let r=await sb.from("meals").upsert({household_id:hid,meal_date:$("mealDate").value,meal_type:$("mealType").value,name:n,created_by:user.id},{onConflict:"household_id,meal_date,meal_type"});if(r.error)throw r.error;$("mealName").value="";await activity("meal","อัปเดตเมนูอาหาร",n,"meal");await loadMeals();homeRender()});
+async function loadMeals(){let end=new Date();end.setDate(end.getDate()+6);let r=await sb.from("meals").select("*").eq("household_id",hid).gte("meal_date",today()).lte("meal_date",end.toISOString().slice(0,10)).order("meal_date");if(r.error)throw r.error;S.meals=r.data;let h="";for(let i=0;i<7;i++){let d=new Date();d.setDate(d.getDate()+i);let ds=d.toISOString().slice(0,10),a=r.data.filter(x=>x.meal_date===ds);h+=`<div class="item"><b>${i?"วัน"+d.toLocaleDateString("th-TH",{weekday:"short",day:"numeric",month:"short"}):"วันนี้"}</b>${a.map(x=>`<div>${esc(x.meal_type)} — ${esc(x.name)} <button class="danger delMeal" data-id="${x.id}" style="width:auto;padding:4px 8px">ลบ</button></div>`).join("")||'<div class="small">ยังไม่มีเมนู</div>'}</div>`}$("mealList").innerHTML=h;document.querySelectorAll(".delMeal").forEach(b=>b.onclick=()=>remove("meals",b.dataset.id,loadMeals))}
+$("addShop").onclick=e=>act(e.currentTarget,async()=>{let n=$("shopName").value.trim();if(!n)throw Error("กรอกรายการ");let r=await sb.from("shopping_items").insert({household_id:hid,created_by:user.id,requested_by:user.id,name:n,qty:$("shopQty").value,category:$("shopCategory").value,priority:$("shopPriority").value,assigned_label:"ใครก็ได้ซื้อ",state:"ฝากซื้อ"});if(r.error)throw r.error;$("shopName").value="";await activity("shopping","เพิ่มรายการซื้อของ",n,"shopping");await loadShop();homeRender()});
+async function loadShop(){let r=await sb.from("shopping_items").select("*").eq("household_id",hid).order("created_at",{ascending:false});if(r.error)throw r.error;S.shop=r.data;$("shopList").innerHTML=r.data.map(x=>`<div class="item"><b>${esc(x.name)}</b> × ${esc(x.qty)} <span class="badge ${x.priority==="high"?"red":x.priority==="normal"?"yellow":"green"}">${x.priority==="high"?"วันนี้":x.priority==="normal"?"สะดวก":"ไม่รีบ"}</span><div class="small">${esc(x.category)} • ${esc(x.state)}</div><div class="row"><button class="soft shopNext" data-id="${x.id}" data-state="${esc(x.state)}">เปลี่ยนสถานะ</button><button class="danger delShop" data-id="${x.id}">ลบ</button></div></div>`).join("")||'<div class="small">ไม่มีรายการ</div>';document.querySelectorAll(".shopNext").forEach(b=>b.onclick=async()=>{let nx=b.dataset.state==="ฝากซื้อ"?"กำลังซื้อ":b.dataset.state==="กำลังซื้อ"?"ซื้อแล้ว":"ฝากซื้อ";let q=await sb.rpc("set_shopping_state",{p_item:b.dataset.id,p_state:nx});if(q.error)return say(q.error.message);await loadShop();homeRender()});document.querySelectorAll(".delShop").forEach(b=>b.onclick=()=>remove("shopping_items",b.dataset.id,loadShop))}
+$("addStock").onclick=e=>act(e.currentTarget,async()=>{let n=$("stockName").value.trim();if(!n)throw Error("กรอกชื่อของ");let r=await sb.from("inventory_items").insert({household_id:hid,name:n,quantity:$("stockQty").value,category:$("stockCat").value,state:$("stockState").value,updated_by:user.id});if(r.error)throw r.error;$("stockName").value="";await activity("inventory","เพิ่มของในบ้าน",n,"inventory");await loadStock()});
+async function loadStock(){let r=await sb.from("inventory_items").select("*").eq("household_id",hid).order("name");if(r.error)throw r.error;S.stock=r.data;$("stockList").innerHTML=r.data.map(x=>`<div class="item"><b>${esc(x.name)}</b> ${esc(x.quantity||"")} <span class="badge ${x.state==="หมดแล้ว"?"red":x.state==="ใกล้หมด"?"yellow":"green"}">${esc(x.state)}</span><select class="stockState" data-id="${x.id}"><option ${x.state==="มีอยู่"?"selected":""}>มีอยู่</option><option ${x.state==="ใกล้หมด"?"selected":""}>ใกล้หมด</option><option ${x.state==="หมดแล้ว"?"selected":""}>หมดแล้ว</option></select><button class="danger delStock" data-id="${x.id}">ลบ</button></div>`).join("")||'<div class="small">ยังไม่มีของ</div>';document.querySelectorAll(".stockState").forEach(s=>s.onchange=async()=>{let q=await sb.from("inventory_items").update({state:s.value,updated_by:user.id}).eq("id",s.dataset.id);if(q.error)return say(q.error.message);await Promise.all([loadStock(),loadShop()]);homeRender()});document.querySelectorAll(".delStock").forEach(b=>b.onclick=()=>remove("inventory_items",b.dataset.id,loadStock))}
+$("addExpense").onclick=e=>act(e.currentTarget,async()=>{let n=$("expenseName").value.trim(),a=Number($("expenseAmount").value);if(!n||!a)throw Error("กรอกรายการและจำนวนเงิน");let r=await sb.from("expenses").insert({household_id:hid,name:n,amount:a,paid_by_label:me.display_name,created_by:user.id,expense_date:$("expenseDate").value,category:$("expenseCat").value,note:$("expenseNote").value});if(r.error)throw r.error;$("expenseName").value=$("expenseAmount").value=$("expenseNote").value="";await activity("expense","เพิ่มค่าใช้จ่าย",n+" "+money(a),"expense");await loadExpenses();homeRender()});
+async function loadExpenses(){let start=today().slice(0,7)+"-01",r=await sb.from("expenses").select("*").eq("household_id",hid).gte("expense_date",start).order("expense_date",{ascending:false});if(r.error)throw r.error;S.expenses=r.data;$("expenseTotal").textContent=money(r.data.reduce((s,x)=>s+Number(x.amount),0));let sums={};r.data.forEach(x=>sums[x.paid_by_label||"ไม่ระบุ"]=(sums[x.paid_by_label||"ไม่ระบุ"]||0)+Number(x.amount));$("expenseByMember").textContent=Object.entries(sums).map(([k,v])=>k+" "+money(v)).join(" • ");$("expenseList").innerHTML=r.data.map(x=>`<div class="item"><b>${esc(x.name)}</b> ${money(x.amount)}<div class="small">${esc(x.expense_date)} • ${esc(x.category)} • ${esc(x.paid_by_label)}</div><button class="danger delExpense" data-id="${x.id}">ลบ</button></div>`).join("")||'<div class="small">ยังไม่มีค่าใช้จ่าย</div>';document.querySelectorAll(".delExpense").forEach(b=>b.onclick=()=>remove("expenses",b.dataset.id,loadExpenses))}
+async function upload(file,id,kind){if(!file)return null;if(file.size>5*1024*1024)throw Error("รูปต้องไม่เกิน 5 MB");let ext=(file.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,""),path=`${hid}/bills/${id}/${kind}.${ext}`,r=await sb.storage.from("household-files").upload(path,file,{upsert:true});if(r.error)throw r.error;return path}async function signed(p){if(!p)return null;let r=await sb.storage.from("household-files").createSignedUrl(p,600);return r.data?.signedUrl}
+$("addBill").onclick=e=>act(e.currentTarget,async()=>{let a=Number($("billAmount").value);if(!a)throw Error("กรอกยอดบิล");let r=await sb.from("bills").insert({household_id:hid,created_by:user.id,bill_type:$("billType").value,amount:a,billing_period:$("billPeriod").value,due_date:$("billDue").value||null,reference_no:$("billRef").value,note:$("billNote").value,status:"รอจ่าย"}).select().single();if(r.error)throw r.error;let p=await upload($("billQr").files[0],r.data.id,"qr");if(p){let u=await sb.from("bills").update({qr_path:p}).eq("id",r.data.id);if(u.error)throw u.error}$("billAmount").value=$("billPeriod").value=$("billDue").value=$("billRef").value=$("billNote").value=$("billQr").value="";await activity("bill","เพิ่มบิล",$("billType").value+" "+money(a),"bill",r.data.id);await loadBills();homeRender();say("บันทึกบิลแล้ว",true)});
+async function loadBills(){let r=await sb.from("bills").select("*").eq("household_id",hid).neq("status","ยกเลิก").order("created_at",{ascending:false});if(r.error)throw r.error;S.bills=r.data;let box=$("billList");box.innerHTML="";for(let x of r.data){let qr=await signed(x.qr_path),sl=await signed(x.slip_path),d=document.createElement("div");d.className="item";let overdue=x.due_date&&x.due_date<today()&&!["จ่ายแล้ว","รอตรวจสอบ"].includes(x.status);d.innerHTML=`<b>${esc(x.bill_type)}</b> <span class="badge ${x.status==="จ่ายแล้ว"?"green":overdue?"red":"yellow"}">${overdue?"เกินกำหนด":esc(x.status)}</span><div class="big">${money(x.amount)}</div><div class="small">${esc(x.billing_period||"")}${x.due_date?" • ครบกำหนด "+x.due_date:""}</div>${qr?`<img class="qr" src="${qr}">`:""}${sl?`<div class="small">สลิป</div><img class="qr" src="${sl}">`:""}`;if(x.status==="รอจ่าย"){let b=document.createElement("button");b.className="soft";b.textContent="รับบิล / ฉันจะจ่าย";b.onclick=async()=>{let q=await sb.rpc("accept_bill",{p_bill:x.id});if(q.error)return say(q.error.message);await loadBills();homeRender()};d.appendChild(b)}if(["รอจ่าย","รับบิลแล้ว","กำลังจ่าย"].includes(x.status)){let f=document.createElement("input");f.type="file";f.accept="image/jpeg,image/png,image/webp";f.onchange=async()=>{try{let p=await upload(f.files[0],x.id,"slip"),q=await sb.rpc("submit_bill_slip",{p_bill:x.id,p_slip_path:p});if(q.error)throw q.error;await loadBills();homeRender();say("ส่งสลิปแล้ว • รอตรวจสอบ",true)}catch(e){say(e.message)}};d.appendChild(f)}if(x.status==="รอตรวจสอบ"&&x.created_by===user.id&&x.paid_by!==user.id){let b=document.createElement("button");b.textContent="✅ ยืนยันการชำระ";b.onclick=async()=>{let q=await sb.rpc("verify_bill",{p_bill:x.id});if(q.error)return say(q.error.message);await loadBills();homeRender()};d.appendChild(b)}if(x.created_by===user.id&&!["จ่ายแล้ว","ยกเลิก"].includes(x.status)){let eb=document.createElement("button");eb.className="soft";eb.textContent="✏️ แก้ไขบิล / ดูประวัติ";eb.onclick=()=>openBillEdit(x.id);d.appendChild(eb)}
+if(x.created_by===user.id){let db=document.createElement("button");db.className="danger";db.textContent="🗑️ ลบบิลถาวร";db.onclick=async()=>{if(!confirm("ลบบิลนี้ถาวร? ประวัติบิลจะถูกลบด้วย"))return;let q=await sb.rpc("delete_bill",{p_bill:x.id});if(q.error)return say(q.error.message);await Promise.all([loadBills(),loadActivity()]);homeRender();say("ลบบิลแล้ว",true)};d.appendChild(db)}box.appendChild(d)}if(!r.data.length)box.innerHTML='<div class="small">ไม่มีบิล</div>'}
+async function remove(table,id,reload){if(!confirm("ลบรายการนี้?"))return;let r=await sb.from(table).delete().eq("id",id);if(r.error)return say(r.error.message);await reload();homeRender()}
+function homeRender(){let pending=S.shop.filter(x=>x.state!=="ซื้อแล้ว").length,bills=S.bills.filter(x=>x.status!=="จ่ายแล้ว").length,total=S.expenses.reduce((s,x)=>s+Number(x.amount),0);$("stats").innerHTML=`<div class="stat"><b>${pending}</b><div class="small">ต้องซื้อ</div></div><div class="stat"><b>${bills}</b><div class="small">บิล</div></div><div class="stat"><b>${money(total)}</b><div class="small">เดือนนี้</div></div>`;$("todayMeals").innerHTML=S.meals.filter(x=>x.meal_date===today()).map(x=>`<div>${esc(x.meal_type)} — ${esc(x.name)}</div>`).join("")||'<div class="small">ยังไม่มีเมนู</div>';$("homeBills").innerHTML=S.bills.filter(x=>x.status!=="จ่ายแล้ว").slice(0,3).map(x=>`<div class="item"><b>${esc(x.bill_type)}</b> ${money(x.amount)} <span class="badge">${esc(x.status)}</span></div>`).join("")||'<div class="small">🎉 ไม่มีบิลค้าง</div>'}
+function houseRender(){$("houseInfo").innerHTML=`<b>${esc(house.name)}</b><div class="small">รหัสเชิญ: ${esc(house.invite_code)}</div>`;$("houseMembers").innerHTML=S.members.map(x=>`<div class="item"><b>${esc(x.display_name)}</b> <span class="badge">${esc(x.role)}</span><div class="small">${esc(x.status)}</div></div>`).join("")}
+$("copyInvite").onclick=async()=>{try{await navigator.clipboard.writeText(house.invite_code);say("คัดลอกรหัสเชิญแล้ว",true)}catch{say("รหัสเชิญ: "+house.invite_code,true)}}
+
+function memberById(id){return S.members.find(m=>m.user_id===id)||{display_name:"สมาชิก",profile_color:"#175c43"}}
+function boardDate(v){try{return new Date(v).toLocaleString("th-TH",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}catch{return ""}}
+async function boardImage(path){return path?await signed(path):null}
+async function boardUpload(file,topicId,kind){
+ if(!file)return null;if(file.size>5*1024*1024)throw Error("รูปต้องไม่เกิน 5 MB");
+ let ext=(file.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,"");
+ let path=`${hid}/board/${topicId}/${kind}-${Date.now()}.${ext}`;
+ let r=await sb.storage.from("household-files").upload(path,file,{upsert:false});if(r.error)throw r.error;return path
+}
+async function loadTopics(){
+ let q=sb.from("board_topics").select("*").eq("household_id",hid).order("is_pinned",{ascending:false}).order("updated_at",{ascending:false});
+ let r=await q;if(r.error){$("boardPreview").textContent="Board: "+r.error.message;return}
+ S.topics=r.data||[];await renderTopicList();renderBoardPreview()
+}
+function renderBoardPreview(){
+ let t=S.topics[0];$("boardPreview").innerHTML=t?`${t.is_pinned?"📌 ":""}<b>${esc(t.title)}</b> • ${esc(t.category)} • ${boardDate(t.updated_at)}`:"ยังไม่มีกระทู้ • ลองตั้งกระทู้แรกของบ้าน";
+ let seen=Number(localStorage.getItem("board_seen_"+hid)||0),newCount=S.topics.filter(x=>new Date(x.updated_at).getTime()>seen).length;
+ $("boardNew").textContent=newCount?`(${newCount} ใหม่)`:""
+}
+async function renderTopicList(){
+ if(!$("topicList"))return;let cat=$("boardFilter")?.value||"",arr=cat?S.topics.filter(x=>x.category===cat):S.topics;
+ let replyCounts={};if(arr.length){let r=await sb.from("board_replies").select("topic_id").eq("household_id",hid);if(!r.error)(r.data||[]).forEach(x=>replyCounts[x.topic_id]=(replyCounts[x.topic_id]||0)+1)}
+ $("topicList").innerHTML=arr.map(t=>{let m=memberById(t.created_by);return `<div class="topic ${t.is_pinned?"pinned":""}" data-topic="${t.id}"><div class="topicTitle">${t.is_pinned?"📌 ":""}${esc(t.title)}</div><div><span class="boardBadge">${esc(t.category)}</span></div><div class="topicMeta">โดย ${esc(m.display_name)} • ${boardDate(t.created_at)} • 💬 ${replyCounts[t.id]||0} ตอบ</div><div class="small">${esc(t.body).slice(0,100)}${t.body.length>100?"…":""}</div></div>`}).join("")||'<div class="small">ยังไม่มีกระทู้ในหมวดนี้</div>';
+ document.querySelectorAll("[data-topic]").forEach(el=>el.onclick=()=>openTopic(el.dataset.topic))
+}
+$("openBoard").onclick=async()=>{page("board");localStorage.setItem("board_seen_"+hid,Date.now());$("boardNew").textContent="";await loadTopics()};
+$("boardFilter").onchange=renderTopicList;
+$("newTopicBtn").onclick=()=>show("topicModal");
+$("closeTopicModal").onclick=()=>show("topicModal",false);
+$("createTopic").onclick=e=>act(e.currentTarget,async()=>{
+ let title=$("topicTitle").value.trim(),body=$("topicBody").value.trim();if(!title||!body)throw Error("กรอกหัวข้อและข้อความ");
+ let r=await sb.from("board_topics").insert({household_id:hid,created_by:user.id,title,category:$("topicCategory").value,body}).select().single();if(r.error)throw r.error;
+ let img=await boardUpload($("topicImage").files[0],r.data.id,"topic");if(img){let u=await sb.from("board_topics").update({image_path:img}).eq("id",r.data.id);if(u.error)throw u.error}
+ await activity("board_topic","ตั้งกระทู้ใหม่",title,"board",r.data.id);
+ $("topicTitle").value=$("topicBody").value=$("topicImage").value="";show("topicModal",false);await loadTopics();await openTopic(r.data.id);say("โพสต์กระทู้แล้ว",true)
+});
+async function openTopic(id){
+ currentTopic=id;showAllReplies=false;let r=await sb.from("board_topics").select("*").eq("id",id).single();if(r.error)return say(r.error.message);
+ let t=r.data,m=memberById(t.created_by),av=await memberAvatar(m),img=await boardImage(t.image_path);
+ let owner=t.created_by===user.id;
+ $("topicPost").innerHTML=`<div class="postHead"><img class="boardAvatar" src="${av}"><div><b>${esc(m.display_name)}</b><div class="small">${boardDate(t.created_at)} • ${esc(t.category)} ${t.is_pinned?"• 📌 ปักหมุด":""}</div></div></div><h2>${esc(t.title)}</h2><div class="postBody">${esc(t.body)}</div>${img?`<img class="boardImg" src="${img}">`:""}<div class="reactions" id="topicReacts"></div>${owner?`<div class="row"><button id="pinTopic" class="soft">${t.is_pinned?"เลิกปักหมุด":"📌 ปักหมุด"}</button><button id="deleteTopic" class="danger">ลบกระทู้</button></div>`:""}`;
+ page("topicView");await loadReplies(id);await renderReactions("topic",id,$("topicReacts"));
+ if(owner){$("pinTopic").onclick=async()=>{let q=await sb.rpc("toggle_board_pin",{p_topic:id});if(q.error)return say(q.error.message);await Promise.all([loadTopics(),openTopic(id)])};$("deleteTopic").onclick=async()=>{if(!confirm("ลบกระทู้นี้พร้อมความคิดเห็นทั้งหมด?"))return;let q=await sb.from("board_topics").delete().eq("id",id);if(q.error)return say(q.error.message);currentTopic=null;await loadTopics();page("board");say("ลบกระทู้แล้ว",true)}}
+}
+$("backBoard").onclick=async()=>{currentTopic=null;page("board");await loadTopics()};
+let showAllReplies=false;
+async function loadReplies(topicId,showAll=showAllReplies){
+ let countQ=await sb.from("board_replies").select("id",{count:"exact",head:true}).eq("topic_id",topicId),total=countQ.count||0;
+ let q=sb.from("board_replies").select("*").eq("topic_id",topicId).order("created_at",{ascending:false});if(!showAll)q=q.limit(5);
+ let r=await q;if(r.error)return say(r.error.message);S.replies=(r.data||[]).reverse();
+ let hidden=Math.max(0,total-S.replies.length),toggle=$("toggleReplies"),hint=$("replyHint");
+ if(toggle){toggle.style.display=total>5?"inline-block":"none";toggle.textContent=showAll?"แสดงแค่ 5 ล่าสุด":`ดูข้อความก่อนหน้า (${hidden})`;toggle.onclick=async()=>{showAllReplies=!showAllReplies;await loadReplies(topicId,showAllReplies)}}
+ if(hint)hint.textContent=total>5&&!showAll?`แสดง 5 ข้อความล่าสุดจากทั้งหมด ${total} ข้อความ`:total?`ทั้งหมด ${total} ข้อความ`:"";
+ let signed=await Promise.all(S.replies.map(async x=>{let m=memberById(x.created_by);return{x,m,av:await memberAvatar(m),img:await boardImage(x.image_path)}}));
+ $("replyList").innerHTML=signed.map(({x,m,av,img})=>`<div class="reply" id="reply-${x.id}"><div class="postHead"><img class="boardAvatar" src="${av}"><div><b>${esc(m.display_name)}</b><div class="small">${boardDate(x.created_at)}${x.is_edited?" • แก้ไขแล้ว":""}</div></div></div><div class="postBody">${esc(x.body)}</div>${img?`<img class="boardImg" src="${img}">`:""}<div class="reactions" id="react-${x.id}"></div>${x.created_by===user.id?`<div class="row"><button class="soft editReply" data-id="${x.id}">แก้ไข</button><button class="danger deleteReply" data-id="${x.id}">ลบ</button></div>`:""}</div>`).join("")||'<div class="small">ยังไม่มีความคิดเห็น • เป็นคนแรกที่ตอบได้เลย</div>';
+ await Promise.all(S.replies.map(x=>renderReactions("reply",x.id,$("react-"+x.id))));
+ document.querySelectorAll(".editReply").forEach(b=>b.onclick=async()=>{let x=S.replies.find(v=>v.id===b.dataset.id),v=prompt("แก้ไขข้อความ",x.body);if(v===null||!v.trim())return;let q=await sb.from("board_replies").update({body:v.trim(),is_edited:true}).eq("id",x.id);if(q.error)return say(q.error.message);await loadReplies(currentTopic)});
+ document.querySelectorAll(".deleteReply").forEach(b=>b.onclick=async()=>{if(!confirm("ลบความคิดเห็นนี้?"))return;let q=await sb.from("board_replies").delete().eq("id",b.dataset.id);if(q.error)return say(q.error.message);await loadReplies(currentTopic)})
+}
+$("sendReply").onclick=e=>act(e.currentTarget,async()=>{
+ let body=$("replyBody").value.trim();if(!currentTopic||!body)throw Error("พิมพ์ข้อความก่อน");
+ let r=await sb.from("board_replies").insert({topic_id:currentTopic,household_id:hid,created_by:user.id,body}).select().single();if(r.error)throw r.error;
+ let img=await boardUpload($("replyImage").files[0],currentTopic,"reply");if(img){let u=await sb.from("board_replies").update({image_path:img}).eq("id",r.data.id);if(u.error)throw u.error}
+ let t=S.topics.find(x=>x.id===currentTopic);await activity("board_reply","มีคนตอบกระทู้",t?.title||"OurHome Board","board",currentTopic);
+ $("replyBody").value=$("replyImage").value="";await Promise.all([loadReplies(currentTopic),loadTopics()]);say("ส่งความคิดเห็นแล้ว",true)
+});
+async function renderReactions(kind,id,box){
+ if(!box)return;let col=kind==="topic"?"topic_id":"reply_id",r=await sb.from("board_reactions").select("*").eq(col,id);if(r.error)return;
+ let all=r.data||[],emojis=["👍","❤️","😂"],counts={};all.forEach(x=>counts[x.reaction]=(counts[x.reaction]||0)+1);
+ box.innerHTML=emojis.map(e=>`<button class="react" data-e="${e}">${e} ${counts[e]||""}</button>`).join("");
+ box.querySelectorAll(".react").forEach(b=>b.onclick=()=>toggleReaction(kind,id,b.dataset.e))
+}
+async function toggleReaction(kind,id,reaction){
+ let col=kind==="topic"?"topic_id":"reply_id",q=await sb.from("board_reactions").select("id").eq(col,id).eq("user_id",user.id).eq("reaction",reaction).maybeSingle();
+ if(q.error)return say(q.error.message);
+ if(q.data){let d=await sb.from("board_reactions").delete().eq("id",q.data.id);if(d.error)return say(d.error.message)}
+ else{let row={household_id:hid,user_id:user.id,reaction};row[col]=id;let a=await sb.from("board_reactions").insert(row);if(a.error)return say(a.error.message)}
+ let box=kind==="topic"?$("topicReacts"):$("react-"+id);await renderReactions(kind,id,box)
+}
+function realtime(){
+ if(channel)sb.removeChannel(channel);
+ channel=sb.channel("ourhome-v12-"+hid);
+ let map={household_members:loadMembers,meals:loadMeals,shopping_items:loadShop,inventory_items:loadStock,expenses:loadExpenses,bills:loadBills};
+ Object.entries(map).forEach(([t,f])=>channel.on("postgres_changes",{event:"*",schema:"public",table:t,filter:`household_id=eq.${hid}`},async()=>{try{await f();homeRender();houseRender()}catch(e){say(e.message)}}));
+ channel.on("postgres_changes",{event:"INSERT",schema:"public",table:"household_activity",filter:`household_id=eq.${hid}`},async payload=>{
+   try{await loadActivity();let a=payload.new;if(a.user_id!==user.id)notifyToast(a.title||"มีการอัปเดต",a.detail||"");}catch(e){}
+ });
+ channel.on("postgres_changes",{event:"*",schema:"public",table:"board_topics",filter:`household_id=eq.${hid}`},async()=>{await loadTopics()});
+ channel.on("postgres_changes",{event:"*",schema:"public",table:"board_replies",filter:`household_id=eq.${hid}`},async payload=>{await loadTopics();if(currentTopic&&((payload.new&&payload.new.topic_id===currentTopic)||(payload.old&&payload.old.topic_id===currentTopic)))await loadReplies(currentTopic);if(payload.eventType==="INSERT"&&payload.new.created_by!==user.id)notifyToast("💬 มีความคิดเห็นใหม่","มีคนตอบกระทู้ใน OurHome Board")});
+ channel.on("postgres_changes",{event:"*",schema:"public",table:"board_reactions",filter:`household_id=eq.${hid}`},async payload=>{if(!currentTopic)return;let n=payload.new||payload.old||{};if(n.topic_id===currentTopic)await renderReactions("topic",currentTopic,$("topicReacts"));else if(n.reply_id&&$("react-"+n.reply_id))await renderReactions("reply",n.reply_id,$("react-"+n.reply_id))});
+ channel.subscribe()
+}
+
+function avatarFallback(name,color="#175c43"){
+ let initial=(name||"?").trim().slice(0,1).toUpperCase();
+ let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" rx="60" fill="${color||"#175c43"}"/><text x="60" y="76" text-anchor="middle" font-size="54" font-weight="700" fill="white" font-family="Arial,sans-serif">${initial}</text></svg>`;
+ return "data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(svg)))
+}
+async function memberAvatar(m){
+ if(!m?.avatar_path)return avatarFallback(m?.display_name,m?.profile_color);
+ let u=await signed(m.avatar_path);return u?(u+"&v="+Date.now()):avatarFallback(m.display_name,m.profile_color)
+}
+async function renderProfiles(){
+ let mine=S.members.find(x=>x.user_id===user.id)||{};
+ $("profileName").value=mine.display_name||me.display_name||"";
+ $("profileBio").value=mine.bio||"";$("profileColor").value=mine.profile_color||"#175c43";
+ let av=await memberAvatar(mine);$("profileAvatar").src=av;$("heroAvatar").src=av;
+ [$("profileAvatar"),$("heroAvatar")].forEach(img=>img.onerror=()=>{img.onerror=null;img.src=avatarFallback(mine.display_name,mine.profile_color)});
+ let parts=[];
+ for(const m of S.members){
+   let mav=await memberAvatar(m);
+   let fb=avatarFallback(m.display_name,m.profile_color);
+   parts.push(`<div class="item"><img class="avatar sm" src="${mav}" data-fallback="${fb}"><b>${esc(m.display_name)}</b><div class="small">${esc(m.bio||"")} • ${esc(m.status||"")}</div></div>`);
+ }
+ $("profileMembers").innerHTML=parts.join("");
+ document.querySelectorAll("#profileMembers img").forEach(img=>img.onerror=()=>{img.onerror=null;img.src=img.dataset.fallback});
+ $("profileMembers").innerHTML=parts.join("");
+}
+async function loadActivity(){
+ let r=await sb.from("household_activity").select("*").eq("household_id",hid).order("created_at",{ascending:false}).limit(30);
+ if(r.error){$("activityList").innerHTML='<div class="small">'+esc(r.error.message)+'</div>';return}
+ S.activity=r.data;$("activityList").innerHTML=r.data.map(a=>`<div class="activity"><b>${esc(a.title)}</b><div class="small">${esc(a.detail||"")} • ${new Date(a.created_at).toLocaleString("th-TH")}</div></div>`).join("")||'<div class="small">ยังไม่มีกิจกรรม</div>'
+}
+$("openProfile").onclick=async()=>{page("profile");await Promise.all([renderProfiles(),loadActivity()]);setupSound();await renderOwnerTools()};
+$("profileLogout").onclick=$("logout").onclick;
+$("saveProfile").onclick=e=>act(e.currentTarget,async()=>{
+ let mine=S.members.find(x=>x.user_id===user.id)||{},path=mine.avatar_path||null,file=$("profileFile").files[0];
+ if(file){if(file.size>5*1024*1024)throw Error("รูปต้องไม่เกิน 5 MB");let ext=(file.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,"");path=`${hid}/profiles/${user.id}/avatar.${ext}`;let u=await sb.storage.from("household-files").upload(path,file,{upsert:true});if(u.error)throw u.error}
+ let r=await sb.rpc("update_my_profile",{p_household:hid,p_display_name:$("profileName").value.trim(),p_bio:$("profileBio").value.trim(),p_avatar_path:path,p_profile_color:$("profileColor").value});if(r.error)throw r.error;
+ me.display_name=$("profileName").value.trim();await loadMembers();await renderProfiles();houseRender();say("บันทึกโปรไฟล์แล้ว",true)
+});
+async function openBillEdit(id){
+ let b=S.bills.find(x=>x.id===id);if(!b)return;
+ $("editBillId").value=b.id;$("editBillType").value=b.bill_type;$("editBillAmount").value=b.amount;$("editBillPeriod").value=b.billing_period||"";$("editBillDue").value=b.due_date||"";$("editBillRef").value=b.reference_no||"";$("editBillNote").value=b.note||"";$("editBillQr").value="";
+ let h=await sb.from("bill_history").select("*").eq("bill_id",id).order("created_at",{ascending:false});
+ $("billHistory").innerHTML=h.error?esc(h.error.message):(h.data.map(x=>`<div class="activity"><b>${esc(x.action)}</b><div class="small">${new Date(x.created_at).toLocaleString("th-TH")}</div></div>`).join("")||'<div class="small">ยังไม่มีประวัติ</div>');
+ show("billModal")
+}
+$("closeBillModal").onclick=()=>show("billModal",false);
+$("saveBillEdit").onclick=e=>act(e.currentTarget,async()=>{
+ let id=$("editBillId").value,b=S.bills.find(x=>x.id===id),qr=null,file=$("editBillQr").files[0];if(file)qr=await upload(file,id,"qr");
+ let r=await sb.rpc("edit_bill",{p_bill:id,p_bill_type:$("editBillType").value,p_amount:Number($("editBillAmount").value),p_billing_period:$("editBillPeriod").value,p_due_date:$("editBillDue").value||null,p_reference_no:$("editBillRef").value,p_note:$("editBillNote").value,p_qr_path:qr});if(r.error)throw r.error;
+ show("billModal",false);await Promise.all([loadBills(),loadActivity()]);homeRender();say("แก้ไขบิลแล้ว",true)
+});
+$("cancelBill").onclick=e=>act(e.currentTarget,async()=>{
+ if(!confirm("ยืนยันยกเลิกบิลนี้?"))return;let r=await sb.rpc("cancel_bill",{p_bill:$("editBillId").value});if(r.error)throw r.error;show("billModal",false);await Promise.all([loadBills(),loadActivity()]);homeRender();say("ยกเลิกบิลแล้ว",true)
+});
+
+let audioCtx=null,lastActivityAt=new Date().toISOString();
+function soundEnabled(){return localStorage.getItem("ourhome_sound")!=="off"}
+function beep(){
+ if(!soundEnabled())return;
+ try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type="sine";o.frequency.setValueAtTime(740,audioCtx.currentTime);g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.16,audioCtx.currentTime+.015);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.22);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.23)}catch{}
+}
+let toastTimer;
+function notifyToast(title,detail=""){
+ let t=$("toast");t.innerHTML=`<b>🔔 ${esc(title)}</b>${detail?`<div>${esc(detail)}</div>`:""}`;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3500);beep()
+}
+function setupSound(){
+ $("soundToggle").checked=soundEnabled();
+ $("soundToggle").onchange=()=>localStorage.setItem("ourhome_sound",$("soundToggle").checked?"on":"off");
+ $("testSound").onclick=()=>{localStorage.setItem("ourhome_sound","on");$("soundToggle").checked=true;notifyToast("ทดสอบเสียง","การแจ้งเตือนพร้อมใช้งาน")}
+}
+async function renderOwnerTools(){
+ let mine=S.members.find(x=>x.user_id===user.id),owner=house.owner_id===user.id||mine?.role==="owner",box=$("ownerTools");box.innerHTML="";
+ if(!owner){$("leaveHouse").classList.remove("hidden");return}
+ $("leaveHouse").classList.add("hidden");
+ let others=S.members.filter(x=>x.user_id!==user.id);
+ if(others.length){
+   let sel=document.createElement("select");sel.id="transferOwner";others.forEach(m=>{let o=document.createElement("option");o.value=m.user_id;o.textContent=m.display_name;sel.appendChild(o)});box.appendChild(sel);
+   let b=document.createElement("button");b.className="soft";b.textContent="👑 โอนเจ้าของบ้าน";b.onclick=async()=>{if(!confirm("โอนสิทธิ์เจ้าของบ้านให้สมาชิกนี้?"))return;let r=await sb.rpc("transfer_household_owner",{p_household:hid,p_new_owner:sel.value});if(r.error)return say(r.error.message);say("โอนเจ้าของบ้านแล้ว",true);await enter()};box.appendChild(b)
+ }else{
+   let b=document.createElement("button");b.className="danger";b.textContent="🗑️ ลบบ้านนี้";b.onclick=async()=>{if(!confirm("ลบบ้านนี้ถาวรพร้อมข้อมูลทั้งหมด?"))return;let r=await sb.rpc("delete_household",{p_household:hid});if(r.error)return say(r.error.message);if(channel)await sb.removeChannel(channel);hid=null;show("main",false);show("nav",false);show("setup");say("ลบบ้านแล้ว คุณสามารถสร้างหรือเข้าร่วมบ้านใหม่",true)};box.appendChild(b)
+ }
+}
+$("leaveHouse").onclick=async()=>{if(!confirm("ออกจากบ้านนี้? บัญชีของคุณจะยังอยู่ แต่จะไม่เห็นข้อมูลบ้านนี้"))return;let r=await sb.rpc("leave_household",{p_household:hid});if(r.error)return say(r.error.message);if(channel)await sb.removeChannel(channel);hid=null;show("main",false);show("nav",false);show("setup");$("houseName").value="";$("invite").value="";say("ออกจากบ้านแล้ว • สร้างบ้านใหม่หรือใส่รหัสเชิญได้เลย",true)}
+
+boot();
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>
